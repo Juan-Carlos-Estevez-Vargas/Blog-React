@@ -115,5 +115,20 @@ $ligthGreen : #b9e7e7;
                 }
             }
         }
+
+        // --- FOOTER COMPONENT ---
+        footer {
+            margin-top: 10%;
+            padding: 20px;
+            background-color: $ligthGreen;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+
+            img {
+                width: 10%;
+            }
+        }
     }
 }

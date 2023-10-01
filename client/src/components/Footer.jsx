@@ -1,8 +1,12 @@
 import React from 'react'
+import Logo from '../assets/img/logo.jpg'
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <footer>
+        <img src={Logo} alt="" />
+        <span>Hecho con ❤ por Juan Carlos Estevez Vargas</span>
+    </footer>
   )
 }
 
