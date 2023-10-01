@@ -1,4 +1,6 @@
 import { db } from "../db.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const register = (request, response) => {
   // Verificar que el usuario no exista
@@ -12,7 +14,7 @@ export const register = (request, response) => {
     (error, data) => {
       if (error) response.status(500).json({ error });
       if (data.length)
-        return response.status(409).json({ message: "User already exists" });
+        return response.status(409).json({ message: "El usuario ya existe" });
 
       // Encriptación de la contraseña
       var salt = bcrypt.genSaltSync(10);
@@ -23,12 +25,40 @@ export const register = (request, response) => {
       const values = [[request.body.email, request.body.username, hash]];
       db.query(query, values, (error, data) => {
         if (error) response.status(500).json({ error });
-        response.status(201).json({ message: "User created" });
+        response.status(201).json({ message: "Usuario creado" });
       });
     }
   );
 };
 
-export const login = (request, response) => {};
+export const login = (request, response) => {
+  // Verificar si el usuario existe
+  const query = "SELECT * FROM user WHERE username = ?";
+
+  db.query(query, [request.body.username], (error, data) => {
+    if (error) response.status(500).json({ error });
+    if (data.length === 0)
+      return response.status(404).json({ message: "Usuario no encontrado" });
+
+    // Verificar la contraseña
+    const isPasswordCorrect = bcrypt.compareSync(
+      request.body.password,
+      data[0].password
+    );
+
+    if (!isPasswordCorrect)
+      return response.status(401).json({ message: "Contrasena incorrecta" });
+
+    const token = jwt.sign({ id: data[0].id }, "jwtkey");
+    const { password, ...other } = data[0];
+
+    response
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json(other);
+  });
+};
 
 export const logout = (request, response) => {};
