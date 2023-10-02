@@ -7,7 +7,9 @@ const Login = () => {
     password: '',
   })
 
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -19,7 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:8800/api/auth/login', inputs);
+      await login(inputs);
       navigate('http://localhost:8800/api/');
     } catch (error) {
       setError(error.response.data);
