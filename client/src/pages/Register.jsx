@@ -23,9 +23,18 @@ const Register = () => {
 
     try {
       await axios.post('http://localhost:8800/api/auth/register', inputs);
-      navigate('http://localhost:8800/api/auth/login');
+      navigate('/login');
     } catch (error) {
-      setError(error.response.data);
+      if (error.response) {
+        console.error(error.response);
+        setError(error.response.data);
+      } else if (error.request) {
+        console.error(error.request);
+        setError(error.request);
+      } else {
+        console.error('Error', error.message);
+        setError(error.message);
+      }
     }
   }
 
@@ -37,7 +46,7 @@ const Register = () => {
             <input required type="email" placeholder='Correo' name ="email" onChange={handleChange} />
             <input required type="password" placeholder='Contraseña' name ="password" onChange={handleChange} />
             <button onClick={handleSubmit}>Register</button>
-            {error && <p>{error}</p>}
+            {error && <p>{error.message}</p>}
             <span>Ya tienes una cuenta? <Link to="/login">Inicia Sesión</Link></span>
         </form>
     </div>

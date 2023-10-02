@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import { AuthContext } from '../context/authContext';
 
 const Write = () => {
   const state = useLocation().state;
+  const { currentUser } = useContext(AuthContext);
   const [value, setValue] = useState(state?.title || '');
   const [title, setTitle] = useState(state?.description || '');
   const [img, setImg] = useState(null);
@@ -17,7 +19,11 @@ const Write = () => {
     try {
       const formData = new FormData();
       formData.append('file', img);
-      const response = await axios.post('http://localhost:8800/api/upload', formData);
+      const response = await axios.post('http://localhost:8800/api/upload', formData, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
+        },
+      });
       return response.data;
     } catch (err) {
       console.log(err);
@@ -34,11 +40,20 @@ const Write = () => {
         description: value, 
         category, 
         img: img ? imgUrl : ""
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
+        },
       }) : await axios.post('http://localhost:8800/api/posts/', {
         title, 
         description: value, 
-        category, img: img ? imgUrl : "", 
+        category, 
+        img: img ? imgUrl : "", 
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
+        },
       });
 
       navigate('/');      

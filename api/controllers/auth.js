@@ -1,12 +1,11 @@
 import { db } from "../db.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 export const register = (request, response) => {
   // Verificar que el usuario no exista
   const query = "SELECT * FROM user WHERE email = ? OR username = ?";
   console.log(request.body);
-  console.log(query);
 
   db.query(
     query,
@@ -21,7 +20,7 @@ export const register = (request, response) => {
       var hash = bcrypt.hashSync(request.body.password, salt);
 
       // Creación del usuario en la abse de datos
-      const query = "INSERT INTO users (email, username, password) VALUES (?)";
+      const query = "INSERT INTO user (email, username, password) VALUES (?)";
       const values = [[request.body.email, request.body.username, hash]];
       db.query(query, values, (error, data) => {
         if (error) response.status(500).json({ error });
@@ -52,18 +51,22 @@ export const login = (request, response) => {
     const token = jwt.sign({ id: data[0].id }, "jwtkey");
     const { password, ...other } = data[0];
 
+    // Enviar el token como parte de la respuesta JSON
     response
       .cookie("access_token", token, {
         httpOnly: true,
       })
       .status(200)
-      .json(other);
+      .json({ other, token }); // Aquí agregamos el token al objeto JSON
   });
 };
 
 export const logout = (request, response) => {
-    response.clearCookie("access_token", {
+  response
+    .clearCookie("access_token", {
       sameSite: "none",
-      secure: true
-    }).status(200).json({ message: "Sesión cerrada" });
+      secure: true,
+    })
+    .status(200)
+    .json({ message: "Sesión cerrada" });
 };

@@ -23,7 +23,10 @@ export const getPost = (request, response) => {
 
 export const addPost = (request, response) => {
   // Verificar el token JWT
-  const token = request.cookies.access_token;
+  const authorizationHeader = request.headers.authorization; // Obtiene el valor del encabezado 'Authorization'
+  const token = authorizationHeader.split(" ")[1]; // Divide el encabezado para obtener el token
+
+  //const token = request.cookies.access_token;
   if (!token) {
     return response.status(401).json({ message: "No autorizado" });
   }

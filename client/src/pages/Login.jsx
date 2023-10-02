@@ -14,21 +14,26 @@ const Login = () => {
 
   const handleChange = (e) => {
     setInputs((prevState) => ({
-      ...prev, [e.target.name]: e.target.value
+      ...prevState, [e.target.name]: e.target.value
     }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      await login(inputs);
-      navigate('http://localhost:8800/api/');
+      const response = await login(inputs);
+        
+      if (response && response.data) {
+        navigate('/');
+      } else {
+        setError('Error de inicio de sesión');
+      }
     } catch (error) {
-      setError(error.response.data);
+      setError(error.message || 'Error de inicio de sesión');
     }
   }
-
+  
   return (
     <div className='auth'>
         <h1>Inicio de Sesión</h1>

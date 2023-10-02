@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 export const AuthContext = createContext();
@@ -13,14 +13,18 @@ export const AuthContextProvider = ({ children }) => {
       "http://localhost:8800/api/auth/login",
       inputs
     );
+    const token = response.data.token;
+    localStorage.setItem("token", token); // Almacena el token en el localStorage
     setCurrentUser(response.data);
+    return response;
   };
 
-  const logout = async (inputs) => {
-    await axios.post("http://localhost:8800/api/auth/logout", inputs);
+  const logout = async () => {
+    await axios.post("http://localhost:8800/api/auth/logout");
+    localStorage.removeItem("token"); // Elimina el token del localStorage
     setCurrentUser(null);
   };
-
+  
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
