@@ -13,6 +13,7 @@ const Menu = ({category}) => {
                 console.log(error); 
             }
         }    
+        fetchData();
     })
 
   return (
