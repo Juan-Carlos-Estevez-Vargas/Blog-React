@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Edit from '../assets/img/edit.png'
 import Delete from '../assets/img/delete.png'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Menu from '../components/Menu'
 import axios from 'axios'
 import moment from 'moment'
@@ -10,6 +10,7 @@ import { AuthContext } from '../context/authContext'
 const Single = () => {
   const [post, setPost] = useState({});
   const location = useLocation();
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -19,11 +20,20 @@ const Single = () => {
         const response = await axios.get(`http://localhost:8800/api/posts/${id}`);
         setPost(response.data);
       } catch (error) {
-        
+        console.log(error);
       }
     }
     fetchData();
   }, []);
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8800/api/posts/${post.id}`);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="single">
@@ -39,7 +49,7 @@ const Single = () => {
             <Link to="/write?edit=2">
               <img src={Edit} alt="" />
             </Link>
-            <img src={Delete} alt="" />
+            <img onClick={handleDelete} src={Delete} alt="" />
           </div>}
         </div>
         <h1>{post.title}</h1>
