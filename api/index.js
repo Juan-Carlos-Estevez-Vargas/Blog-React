@@ -5,6 +5,7 @@ import userRoutes from "./routes/users.js";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import cors from "cors";
+import { PORT } from "./config.js";
 
 const app = express();
 
@@ -42,6 +43,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 
-app.listen(8800, () => {
+app.listen(PORT, () => {
   console.log("Conectado");
 });
