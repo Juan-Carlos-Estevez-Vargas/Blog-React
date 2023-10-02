@@ -11,19 +11,29 @@ export const register = (request, response) => {
     query,
     [request.body.email, request.body.username],
     (error, data) => {
-      if (error) response.status(500).json({ error });
-      if (data.length)
+      if (error) {
+        // Ocurrió un error en la consulta SQL
+        return response.status(500).json({ error });
+      }
+      if (data.length) {
+        // El usuario ya existe
         return response.status(409).json({ message: "El usuario ya existe" });
+      }
 
       // Encriptación de la contraseña
       var salt = bcrypt.genSaltSync(10);
       var hash = bcrypt.hashSync(request.body.password, salt);
 
-      // Creación del usuario en la abse de datos
-      const query = "INSERT INTO user (email, username, password) VALUES (?)";
-      const values = [[request.body.email, request.body.username, hash]];
-      db.query(query, values, (error, data) => {
-        if (error) response.status(500).json({ error });
+      // Creación del usuario en la base de datos
+      const insertQuery =
+        "INSERT INTO user (email, username, password) VALUES (?, ?, ?)";
+      const values = [request.body.email, request.body.username, hash];
+
+      db.query(insertQuery, values, (insertError, insertData) => {
+        if (insertError) {
+          // Ocurrió un error al insertar el usuario
+          return response.status(500).json({ error: insertError });
+        }
         response.status(201).json({ message: "Usuario creado" });
       });
     }
