@@ -12,7 +12,8 @@ const app = express();
 const corsOrigin = {
   origin: FRONT_URL,
   credentials: true,
-  optionSuccessStatus: 200,
+  methods: ["GET", "POST", "PUT", "DELETE"], // Especifica los métodos permitidos
+  optionsSuccessStatus: 204, // Permite que las solicitudes OPTIONS tengan éxito
 };
 
 app.use(cors(corsOrigin));
