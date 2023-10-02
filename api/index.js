@@ -10,7 +10,7 @@ import { PORT, FRONT_URL } from "./config.js";
 const app = express();
 
 const corsOrigin = {
-  origin: "FRONT_URL",
+  origin: FRONT_URL,
   credentials: true,
   optionSuccessStatus: 200,
 };
