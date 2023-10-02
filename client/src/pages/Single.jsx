@@ -1,29 +1,49 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Edit from '../assets/img/edit.png'
 import Delete from '../assets/img/delete.png'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Menu from '../components/Menu'
+import axios from 'axios'
+import moment from 'moment'
+import { AuthContext } from '../context/authContext'
 
 const Single = () => {
+  const [post, setPost] = useState({});
+  const location = useLocation();
+  const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const id = location.pathname.split("/")[2];
+      try {
+        const response = await axios.get(`http://localhost:8800/api/posts/${id}`);
+        setPost(response.data);
+      } catch (error) {
+        
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="single">
       <div className="content">
-        <img src="https://images.pexels.com/photos/6489663/pexels-photo-6489663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" />
+        <img src={post?.img} alt="" />
         <div className="user">
-          <img src="https://images.pexels.com/photos/6489663/pexels-photo-6489663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=3" alt="" />
+          {post.userImg && <img src={post.userImg} alt="" />}
           <div className="info">
-            <span>Juan</span>
-            <p>Posteado hace 2 días</p>
+            <span>{post.username}</span>
+            <p>Posteado hace {moment(post.date).fromNow()}</p>
           </div>
-          <div className="edit">
+          {currentUser .username === post.username && <div className="edit">
             <Link to="/write?edit=2">
               <img src={Edit} alt="" />
             </Link>
             <img src={Delete} alt="" />
-          </div>
+          </div>}
         </div>
-        <h1>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sequi autem similique cum nihil quos porro culpa commodi molestiae nobis, tenetur sed quibusdam optio? Neque sed aliquam sint in molestias!</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid saepe omnis, quo numquam excepturi iure distinctio eum expedita optio, cum, cumque eius quasi aperiam nulla explicabo labore impedit corrupti nihil.</p>
+        <h1>{post.title}</h1>
+        {post.description}
       </div>
       <Menu />
     </div>

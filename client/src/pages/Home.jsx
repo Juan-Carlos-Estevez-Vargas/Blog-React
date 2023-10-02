@@ -9,7 +9,7 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8800/api/posts'+category);
+                const response = await axios.get(`http://localhost:8800/api/posts${category}`);
                 setPosts(response.data);
             } catch (error) {
             
