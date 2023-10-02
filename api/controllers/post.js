@@ -14,14 +14,40 @@ export const getPosts = (request, response) => {
 
 export const getPost = (request, response) => {
   const query =
-    "SELECT username, title, description, p.img, u.img AS userImg, category, date FROM user u JOIN posts p ON u.id = p.userid WHERE p.id = ?";
+    "SELECT p.id, username, title, description, p.img, u.img AS userImg, category, date FROM user u JOIN posts p ON u.id = p.userid WHERE p.id = ?";
   db.query(query, [request.params.id], (error, data) => {
     if (error) response.status(500).json({ error });
     response.status(200).json(data);
   });
 };
 
-export const addPost = (request, response) => {};
+export const addPost = (request, response) => {
+  // Verificar el token JWT
+  const token = request.cookies.access_token;
+  if (!token) {
+    return response.status(401).json({ message: "No autorizado" });
+  }
+
+  jwt.verify(token, "jwtkey", (error, user) => {
+    if (error) return response.status(403).json({ message: "Token invalido" });
+
+    const query =
+      "INSERT INTO posts (title, description, category, img, userid) VALUES (?)";
+
+    const values = [
+      request.body.title,
+      request.body.description,
+      request.body.category,
+      request.body.img,
+      user.id,
+    ];
+
+    db.query(query, [values], (error, data) => {
+      if (error) response.status(500).json({ error });
+      return response.status(200).json({ message: "Post agregado" });
+    });
+  });
+};
 
 export const deletePost = (request, response) => {
   // Verificar el token JWT
@@ -46,4 +72,32 @@ export const deletePost = (request, response) => {
   });
 };
 
-export const updatePost = (request, response) => {};
+export const updatePost = (request, response) => {
+  // Verificar el token JWT
+  const token = request.cookies.access_token;
+  if (!token) {
+    return response.status(401).json({ message: "No autorizado" });
+  }
+
+  jwt.verify(token, "jwtkey", (error, user) => {
+    if (error) return response.status(403).json({ message: "Token invalido" });
+
+    const postId = request.params.id;
+
+    const query =
+      "UPDATE posts SET title = ?, description = ?, category = ?, img = ? WHERE id = ? AND userid = ?";
+
+    const values = [
+      request.body.title,
+      request.body.description,
+      request.body.category,
+      request.body.img,
+      user.id,
+    ];
+
+    db.query(query, [...values, postId, user.id], (error, data) => {
+      if (error) response.status(500).json({ error });
+      return response.status(200).json({ message: "Post actualizado" });
+    });
+  });
+};

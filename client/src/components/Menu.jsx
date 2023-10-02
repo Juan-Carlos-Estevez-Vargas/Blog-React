@@ -14,15 +14,20 @@ const Menu = ({category}) => {
             }
         }    
         fetchData();
-    })
+    });
+
+    const getText = (html) => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        return doc.body.textContent;
+    };
 
   return (
     <div className="menu">
         <h1>Otros posts que podrían gustarte</h1>
         {posts.map(post => (
             <div className="post" key={post.id}>
-                <img src={post.img} alt="" />
-                <h2>{post.title}</h2>
+                <img src={`../uploads/${post?.img}`} alt="" />
+                <h2>{getText(post.title)}</h2>
                 <button>Leer más</button>
             </div>
         ))}
