@@ -5,10 +5,16 @@ import { API_BASE_URL } from '../../config.js';
 const Menu = ({category}) => {
     const [posts, setPosts] = useState([]);
 
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/posts/?categoria=${category}`);
+                const response = await axios.get(`${API_BASE_URL}/api/posts/?categoria=${category}`, { headers });
                 setPosts(response.data);
             } catch (error) {
                 console.log(error); 

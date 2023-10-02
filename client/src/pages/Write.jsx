@@ -23,6 +23,9 @@ const Write = () => {
       const response = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
         },
       });
       return response.data;
@@ -44,6 +47,9 @@ const Write = () => {
       }, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
         },
       }) : await axios.post(`${API_BASE_URL}/api/posts`, {
         title, 
@@ -54,6 +60,9 @@ const Write = () => {
       }, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
         },
       });
 

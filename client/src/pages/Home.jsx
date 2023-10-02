@@ -15,6 +15,7 @@ const Home = () => {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                   };
+                  
                 const response = await axios.get(`${API_BASE_URL}/api/posts${category}`, { headers });
                 setPosts(response.data);
             } catch (error) {

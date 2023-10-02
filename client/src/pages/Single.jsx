@@ -19,7 +19,13 @@ const Single = () => {
     const fetchData = async () => {
       const id = location.pathname.split("/")[2];
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/posts/${id}`);
+        const headers = {
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        };
+
+        const response = await axios.get(`${API_BASE_URL}/api/posts/${id}`, { headers });
         postRef.current = response.data[0];
         setLoading(false);
       } catch (error) {
@@ -34,6 +40,9 @@ const Single = () => {
       await axios.delete(`${API_BASE_URL}/api/posts/${post.id}`, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
         }
       });
       navigate("/");
