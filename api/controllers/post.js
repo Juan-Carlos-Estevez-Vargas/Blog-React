@@ -23,8 +23,8 @@ export const getPost = (request, response) => {
 
 export const addPost = (request, response) => {
   // Verificar el token JWT
-  const authorizationHeader = request.headers.authorization; // Obtiene el valor del encabezado 'Authorization'
-  const token = authorizationHeader.split(" ")[1]; // Divide el encabezado para obtener el token
+  const authorizationHeader = request.headers.authorization;
+  const token = authorizationHeader.split(" ")[1];
 
   if (!token) {
     return response.status(401).json({ message: "No autorizado" });
@@ -33,18 +33,23 @@ export const addPost = (request, response) => {
   jwt.verify(token, "jwtkey", (error, user) => {
     if (error) return response.status(403).json({ message: "Token invalido" });
 
-    const query =
-      "INSERT INTO posts (title, description, category, img, userid) VALUES (?)";
-
-    const values = [
+    let query =
+      "INSERT INTO posts (title, description, category, userid) VALUES (?, ?, ?, ?)";
+    let values = [
       request.body.title,
       request.body.description,
       request.body.category,
-      request.body.img,
       user.id,
     ];
 
-    db.query(query, [values], (error, data) => {
+    // Verifica si se proporcionó una imagen antes de agregarla a la consulta
+    if (request.body.img) {
+      query =
+        "INSERT INTO posts (title, description, category, img, userid) VALUES (?, ?, ?, ?, ?)";
+      values.push(request.body.img);
+    }
+
+    db.query(query, values, (error, data) => {
       if (error) {
         response.status(500).json({ error });
       } else {
