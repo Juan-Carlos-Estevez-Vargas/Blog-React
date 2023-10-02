@@ -10,10 +10,14 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/posts${category}`);
+                const headers = {
+                    'Access-Control-Allow-Origin': '*',
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                  };
+                const response = await axios.get(`${API_BASE_URL}/api/posts${category}`, { headers });
                 setPosts(response.data);
             } catch (error) {
-            
             }
         } 
         fetchData();
