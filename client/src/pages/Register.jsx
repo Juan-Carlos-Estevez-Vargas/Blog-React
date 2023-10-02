@@ -23,7 +23,13 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`${API_BASE_URL}/api/auth/register`, inputs);
+      const headers = {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      };
+
+      await axios.post(`${API_BASE_URL}/api/auth/register`, inputs, { headers });
       navigate('/login');
     } catch (error) {
       if (error.response) {
