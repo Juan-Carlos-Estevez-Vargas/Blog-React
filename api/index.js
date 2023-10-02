@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "../client/public/uploads");
+    cb(null, "./uploads"); // Directorio relativo a la ubicación del servidor en Vercel
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + "--" + file.originalname);
