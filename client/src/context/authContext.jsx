@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from '../../config.js';
 
 export const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const login = async (inputs) => {
     const response = await axios.post(
-      "http://localhost:8800/api/auth/login",
+      `${API_BASE_URL}/api/auth/login`,
       inputs
     );
     const token = response.data.token;
@@ -20,7 +21,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:8800/api/auth/logout");
+    await axios.post(`${API_BASE_URL}/api/auth/logout`);
     localStorage.removeItem("token"); // Elimina el token del localStorage
     setCurrentUser(null);
   };

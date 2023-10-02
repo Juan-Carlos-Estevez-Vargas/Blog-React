@@ -6,6 +6,7 @@ import Menu from '../components/Menu'
 import axios from 'axios'
 import moment from 'moment'
 import { AuthContext } from '../context/authContext'
+import { API_BASE_URL } from '../../config.js';
 
 const Single = () => {
   const postRef = useRef();
@@ -18,7 +19,7 @@ const Single = () => {
     const fetchData = async () => {
       const id = location.pathname.split("/")[2];
       try {
-        const response = await axios.get(`http://localhost:8800/api/posts/${id}`);
+        const response = await axios.get(`${API_BASE_URL}/api/posts/${id}`);
         postRef.current = response.data[0];
         setLoading(false);
       } catch (error) {
@@ -30,7 +31,7 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8800/api/posts/${post.id}`, {
+      await axios.delete(`${API_BASE_URL}/api/posts/${post.id}`, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
         }

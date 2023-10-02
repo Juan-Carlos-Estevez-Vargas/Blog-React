@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { AuthContext } from '../context/authContext';
+import { API_BASE_URL } from '../../config.js';
 
 const Write = () => {
   const state = useLocation().state;
@@ -19,7 +20,7 @@ const Write = () => {
     try {
       const formData = new FormData();
       formData.append('file', img);
-      const response = await axios.post('http://localhost:8800/api/upload', formData, {
+      const response = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
         },
@@ -35,7 +36,7 @@ const Write = () => {
     const imgUrl = await upload();
 
     try {
-      state ? await axios.put(`http://localhost:8800/api/posts/${state.id}`, {
+      state ? await axios.put(`${API_BASE_URL}/api/posts/${state.id}`, {
         title, 
         description: value, 
         category, 
@@ -44,7 +45,7 @@ const Write = () => {
         headers: {
           Authorization: `Bearer ${currentUser.token}`, // Incluye el token de autenticación en los encabezados
         },
-      }) : await axios.post('http://localhost:8800/api/posts/', {
+      }) : await axios.post(`${API_BASE_URL}/api/posts`, {
         title, 
         description: value, 
         category, 

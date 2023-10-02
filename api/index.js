@@ -5,12 +5,12 @@ import userRoutes from "./routes/users.js";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import cors from "cors";
-import { PORT } from "./config.js";
+import { PORT, FRONT_URL } from "./config.js";
 
 const app = express();
 
 const corsOrigin = {
-  origin: "http://127.0.0.1:5173",
+  origin: "FRONT_URL",
   credentials: true,
   optionSuccessStatus: 200,
 };

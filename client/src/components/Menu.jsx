@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { API_BASE_URL } from '../../config.js';
 
 const Menu = ({category}) => {
     const [posts, setPosts] = useState([]);
@@ -7,7 +8,7 @@ const Menu = ({category}) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8800/api/posts/?categoria=${category}`);
+                const response = await axios.get(`${API_BASE_URL}/api/posts/?categoria=${category}`);
                 setPosts(response.data);
             } catch (error) {
                 console.log(error); 
