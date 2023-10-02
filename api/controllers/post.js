@@ -45,8 +45,11 @@ export const addPost = (request, response) => {
     ];
 
     db.query(query, [values], (error, data) => {
-      if (error) response.status(500).json({ error });
-      return response.status(200).json({ message: "Post agregado" });
+      if (error) {
+        response.status(500).json({ error });
+      } else {
+        response.status(200).json({ message: "Post agregado" });
+      }
     });
   });
 };
