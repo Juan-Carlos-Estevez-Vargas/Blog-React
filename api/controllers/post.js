@@ -26,7 +26,6 @@ export const addPost = (request, response) => {
   const authorizationHeader = request.headers.authorization; // Obtiene el valor del encabezado 'Authorization'
   const token = authorizationHeader.split(" ")[1]; // Divide el encabezado para obtener el token
 
-  //const token = request.cookies.access_token;
   if (!token) {
     return response.status(401).json({ message: "No autorizado" });
   }
@@ -54,7 +53,14 @@ export const addPost = (request, response) => {
 
 export const deletePost = (request, response) => {
   // Verificar el token JWT
-  const token = request.cookies.access_token;
+  const authorizationHeader = request.headers.authorization;
+
+  if (!authorizationHeader) {
+    return response.status(401).json({ message: "No autorizado" });
+  }
+
+  const token = authorizationHeader.split(" ")[1]; // Divide el encabezado para obtener el token
+
   if (!token) {
     return response.status(401).json({ message: "No autorizado" });
   }
@@ -77,7 +83,9 @@ export const deletePost = (request, response) => {
 
 export const updatePost = (request, response) => {
   // Verificar el token JWT
-  const token = request.cookies.access_token;
+  const authorizationHeader = request.headers.authorization; // Obtiene el valor del encabezado 'Authorization'
+  const token = authorizationHeader.split(" ")[1]; // Divide el encabezado para obtener el token
+
   if (!token) {
     return response.status(401).json({ message: "No autorizado" });
   }

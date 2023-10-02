@@ -30,7 +30,11 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8800/api/posts/${post.id}`);
+      await axios.delete(`http://localhost:8800/api/posts/${post.id}`, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        }
+      });
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -62,14 +66,14 @@ const Single = () => {
             <span>{post.username}</span>
             <p>Posteado hace {moment(post.date).fromNow()}</p>
           </div>
-          {currentUser.username === post.username && <div className="edit">
+          {currentUser.other.username === post.username && <div className="edit">
             <Link to="/write?edit=2" state={post}>
               <img src={Edit} alt="" />
             </Link>
             <img onClick={handleDelete} src={Delete} alt="" />
           </div>}
         </div>
-        <h1>{post.title}</h1>
+        <h1>{getText(post.title)}</h1>
         {getText(post.description)}
       </div>
       <Menu category={post.category} />
